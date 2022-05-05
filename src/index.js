@@ -71,7 +71,12 @@ module.exports = {
           game["category"] == "Puzzles" ? "Puzzle" : game["category"])
     );
     games.map((game) => (game["time"] = new Date(game.time).toISOString()));
-    // console.log(games.data.gamelist);
+    games.map(
+      (game) =>
+        (game["url"] =
+          `https://cdn.uptapgame.com/newgames/minigame.html?platform=uptap&appid=` +
+          game.name)
+    );
 
     games.map(async (game) => {
       const entry = await strapi.db.query("api::game.game").findOne({
