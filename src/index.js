@@ -50,6 +50,7 @@ module.exports = {
         (game["title"] = game.name
           .replace(/([A-Z])/g, " $1")
           .trim()
+          .replace(/([A-Za-z])([0-9])/g, "$1 $2")
           .replace(/3 D/g, " 3D"))
     );
     games.map(
