@@ -40,8 +40,7 @@ module.exports = {
         return null;
       }
     };
-    let tmp = await fetcher("https://3090.org/base/api/games");
-    // console.log(tmp.data.data);
+
     let games = await fetcher(
       "https://uptapapi.uptap.com/h5Game/?type=GameList&platform=uptap&token=dXB0YXBnYW1l572R56uZ55So"
     );
@@ -70,11 +69,12 @@ module.exports = {
     );
     games.map((game) => (game["time"] = new Date(game.time).toISOString()));
     // console.log(games.data.gamelist);
+
     games.map(async (game) => {
       const entry = await strapi.db.query("api::game.game").findOne({
         where: { appid: game.name },
       });
-      // console.log(entry);
+      console.log(entry);
       const categoryEntry = await strapi.db
         .query("api::category.category")
         .findOne({
@@ -82,13 +82,14 @@ module.exports = {
             name: game.category,
           },
         });
-      // console.log(categoryEntry);
+      console.log(categoryEntry);
       // console.log(categoryEntry.id);
 
       if (categoryEntry == null) {
         await strapi.db.query("api::category.category").create({
           data: {
             name: game.category,
+            slug: game.category.toLowerCase(),
             publishedAt: new Date(),
           },
         });
@@ -99,7 +100,7 @@ module.exports = {
           },
           data: {
             name: game.category,
-            // slug: game.category.trim().toLowerCase(),
+            slug: game.category.trim().toLowerCase(),
             publishedAt: new Date(),
           },
         });
@@ -108,11 +109,14 @@ module.exports = {
         await strapi.db.query("api::game.game").create({
           data: {
             appid: game.name,
+            title: game.title,
+            slug: game.slug,
             description: game.description,
             icon_url: game.icon,
             game_url: game.url,
             creation_date: new Date(game.time).toISOString(),
             publishedAt: new Date(),
+            category: [categoryEntry.id],
           },
         });
       } else {
@@ -120,23 +124,14 @@ module.exports = {
           where: { appid: game.name },
           data: {
             appid: game.name,
-            title: game.name
-              .replace(/([A-Z])/g, " $1")
-              .trim()
-              .replace(/3 D/g, " 3D"),
-            slug: game.name
-              .replace(/([A-Z])/g, " $1")
-              .trim()
-              .replace(/3 D/g, " 3D")
-              .replace(/ /g, "-")
-              .toLowerCase(),
+            title: game.title,
+            slug: game.slug,
             description: game.description,
             icon_url: game.icon,
             game_url: game.url,
             creation_date: new Date(game.time).toISOString(),
             publishedAt: new Date(),
             // status: "published",
-
             category: [categoryEntry.id],
           },
         });
