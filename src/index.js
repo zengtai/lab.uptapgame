@@ -48,6 +48,8 @@ module.exports = {
     games.map(
       (game) =>
         (game["title"] = game.name
+          .replace(/Sharkis/, "Shark Is")
+          .replace(/Woodis/, "Wood Is")
           .replace(/([A-Z])/g, " $1")
           .trim()
           .replace(/([A-Za-z])([0-9])/g, "$1 $2")
