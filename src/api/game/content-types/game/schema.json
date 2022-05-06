@@ -55,11 +55,16 @@
       ]
     },
     "thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
+    },
+    "gid": {
+      "type": "integer",
+      "unique": true
     }
   }
 }
