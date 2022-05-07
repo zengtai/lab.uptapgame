@@ -48,12 +48,11 @@ module.exports = {
     games.map(
       (game) =>
         (game["title"] = game.name
-          .replace(/Sharkis/, "Shark Is")
-          .replace(/Woodis/, "Wood Is")
+          .replace(/([a-zA-Z])([0-9])/g, "$1 $2")
           .replace(/([A-Z])/g, " $1")
           .trim()
-          .replace(/([A-Za-z])([0-9])/g, "$1 $2")
-          .replace(/3 D/g, " 3D"))
+          .replace(/3 D/g, " 3D")
+          .replace(/\s+/g, " "))
     );
     games.map(
       (game) => (game["slug"] = game.title.replace(/ /g, "-").toLowerCase())
