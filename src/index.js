@@ -46,16 +46,19 @@ module.exports = {
     );
     games = games.data.gamelist;
     games.map(
+      (game) => (game["name"] = game.name.replace(/Sharkis/, "SharkIs"))
+    );
+    games.map((game) => (game["name"] = game.name.replace(/Woodis/, "WoodIs")));
+    games.map(
       (game) =>
         (game["title"] = game.name
-          .replace(/([a-zA-Z])([0-9])/g, "$1 $2")
           .replace(/([A-Z])/g, " $1")
           .trim()
           .replace(/3 D/g, " 3D")
-          .replace(/\s+/g, " "))
+          .replace(/([A-Za-z])([0-9])/g, "$1 $2"))
     );
     games.map(
-      (game) => (game["slug"] = game.title.replace(/ /g, "-").toLowerCase())
+      (game) => (game["slug"] = game.title.replace(/\s+/g, "-").toLowerCase())
     );
     games.map(
       (game) =>
@@ -116,6 +119,7 @@ module.exports = {
         await strapi.db.query("api::game.game").create({
           data: {
             appid: game.name,
+            gid: game.id,
             title: game.title,
             slug: game.slug,
             description: game.description,
@@ -131,6 +135,7 @@ module.exports = {
           where: { appid: game.name },
           data: {
             appid: game.name,
+            gid: game.id,
             title: game.title,
             slug: game.slug,
             description: game.description,
@@ -138,7 +143,6 @@ module.exports = {
             game_url: game.url,
             creation_date: new Date(game.time).toISOString(),
             publishedAt: new Date(),
-            // status: "published",
             category: [categoryEntry.id],
           },
         });
